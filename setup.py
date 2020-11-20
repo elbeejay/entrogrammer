@@ -11,8 +11,7 @@ setup(
     url='https://github.com/elbeejay/entrogrammer',
     packages=find_packages(exclude=['*.tests']),
     long_description='See: https://github.com/elbeejay/entrogrammer',
-    classifiers=['Programming Language :: Python :: 3.6',
-                 'Programming Language :: Python :: 3.7',
+    classifiers=['Programming Language :: Python :: 3.7',
                  'Programming Language :: Python :: 3.8'],
     install_requires=['numpy', 'matplotlib', 'scipy', 'xarray'],
 )
