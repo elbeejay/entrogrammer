@@ -22,6 +22,7 @@ class BaseClassifier(abc.ABC):
 
         """
         self.data = data
+        self.classified = None  # init classified array as Nonetype
 
     @property
     def data(self):
@@ -38,7 +39,17 @@ class BaseClassifier(abc.ABC):
             self._data = data
         else:
             raise TypeError('Invalid type for "data", expected a '
-                            'numpy.ndarray but got: %s' + type(data))
+                            'numpy.ndarray but got: %s', type(data))
+
+    @property
+    def classified(self):
+        """Return private classified array."""
+        return self._classified
+
+    @classified.setter
+    def classified(self, classified):
+        """Create private variable."""
+        self._classified = classified
 
     @abc.abstractmethod
     def classify(self):
@@ -90,12 +101,17 @@ class BinaryClassifier(BaseClassifier):
             raise TypeError('Invalid type for "threshold", expected an '
                             'int or float but got: %s' + type(threshold))
 
-    def classify(self):
-        """Do the binary classification (change data values directly)."""
+    def classify(self, threshold=None):
+        """Do the binary classification."""
+        # initialize the classified array
+        self.classified = np.zeros_like(self._data)
+        # can overwrite threshold with a new one if supplied
+        if threshold is not None:
+            self.threshold = threshold
         # need if tree to avoid making all values 0 or 1 depending on threshold
         if self._threshold > 0:
-            self._data[self._data < self._threshold] = 0
-            self._data[self._data >= self._threshold] = 1
+            self._classified[self._data < self._threshold] = 0
+            self._classified[self._data >= self._threshold] = 1
         else:
-            self._data[self._data >= self._threshold] = 1
-            self._data[self._data < self._threshold] = 0
+            self._classified[self._data >= self._threshold] = 1
+            self._classified[self._data < self._threshold] = 0

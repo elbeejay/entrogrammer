@@ -44,8 +44,10 @@ def test_binary_neg_threshold():
     assert C.threshold == -7.5
     # classify then check values
     C.classify()
-    assert np.all(C.data[0, :] == 1)
-    assert np.all(C.data[1, :] == 0)
+    assert np.all(C.data[0, :] == -5)
+    assert np.all(C.data[1, :] == -10)
+    assert np.all(C.classified[0, :] == 1)
+    assert np.all(C.classified[1, :] == 0)
 
 
 def test_binary_pos_threshold():
@@ -59,11 +61,32 @@ def test_binary_pos_threshold():
     assert np.all(C.data[1, :] == 10)
     # classify then check values
     C.classify()
-    assert np.all(C.data[0, :] == 0)
-    assert np.all(C.data[1, :] == 1)
+    assert np.all(C.data[0, :] == 5)
+    assert np.all(C.data[1, :] == 10)
+    assert np.all(C.classified[0, :] == 0)
+    assert np.all(C.classified[1, :] == 1)
 
 
 def test_binary_invalid_threshold():
     """Test binary classifier with invalid threshold."""
     with pytest.raises(TypeError):
         classifier.BinaryClassifier(np_data, 'invalid')
+
+
+def test_override_threshold():
+    """Test overriding threshold in classify()."""
+    vals = np.zeros((2, 2))
+    vals[0, :] = 5
+    vals[1, :] = 10
+    # create classifier and assert threshold
+    C = classifier.BinaryClassifier(vals, 7)
+    assert C.threshold == 7
+    assert np.all(C.data[0, :] == 5)
+    assert np.all(C.data[1, :] == 10)
+    # classify with different value then check values
+    C.classify(1)
+    assert C.threshold == 1
+    assert np.all(C.data[0, :] == 5)
+    assert np.all(C.data[1, :] == 10)
+    assert np.all(C.classified[0, :] == 1)
+    assert np.all(C.classified[1, :] == 1)
