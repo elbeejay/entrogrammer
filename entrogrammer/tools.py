@@ -66,11 +66,11 @@ def calculate_HL(data, win_size, base):
     """
     # 1-D solution
     if ((len(np.shape(data)) == 1) and (base == 2)):
-        HL = HL_1D_base2(data, win_size)
+        return HL_1D_base2(data, win_size)
     elif ((len(np.shape(data)) == 1) and (base == 10)):
-        HL = HL_1D_base10(data, win_size)
+        return HL_1D_base10(data, win_size)
     elif ((len(np.shape(data)) == 1) and (base == np.e)):
-        HL = HL_1D_basee(data, win_size)
+        return HL_1D_basee(data, win_size)
     else:
         pass
 
@@ -93,8 +93,6 @@ def calculate_HL(data, win_size, base):
         raise NotImplementedError('3-D not implemented yet.')
     else:
         raise TypeError('Dimensions beyond 3 are not supported.')
-
-    return HL
 
 
 @njit

@@ -1,0 +1,12 @@
+[run]
+source = entrogrammer
+
+omit =
+    *__init__*
+
+[report]
+exclude_lines =
+    def HL_1D_base2
+    def HL_1D_base10
+    def HL_1D_basee
+    def np_unique_impl
