@@ -19,6 +19,14 @@ def test_notclassified_error():
         core.global_entropy(C)
 
 
+def test_badbase_error():
+    """Test that an error is raised if base is invalid."""
+    C = classifier.BinaryClassifier(np.zeros(2), 1)
+    C.classify()
+    with pytest.raises(TypeError):
+        core.global_entropy(C, 4)
+
+
 def test_entropy_zero():
     """Test case where entropy is 0."""
     C = classifier.BinaryClassifier(np.zeros(2), 1)
