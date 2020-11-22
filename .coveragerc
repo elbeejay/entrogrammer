@@ -3,6 +3,8 @@ source = entrogrammer
 
 omit =
     *__init__*
+    entrogrammer/plot.py
+
 
 [report]
 exclude_lines =
