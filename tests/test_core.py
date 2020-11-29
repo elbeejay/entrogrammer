@@ -95,7 +95,7 @@ def test_local_entropy_1D():
     C = classifier.BinaryClassifier(np.array([0, 1]), 0.5)
     C.classify()
     HL = core.local_entropy(C, 2, 2)
-    assert HL == 1
+    assert np.all(HL == 1)
 
 
 def test_local_entropy_1D_subset():
@@ -103,7 +103,7 @@ def test_local_entropy_1D_subset():
     C = classifier.BinaryClassifier(np.array([0, 1, 0]), 0.5)
     C.classify()
     HL = core.local_entropy(C, 2)
-    assert HL == entropy((0.5, 0.5))
+    assert np.all(HL == entropy((0.5, 0.5)))
 
 
 def test_local_entropy_1D_tuple():
@@ -111,7 +111,7 @@ def test_local_entropy_1D_tuple():
     C = classifier.BinaryClassifier(np.array([0, 1, 0]), 0.5)
     C.classify()
     HL = core.local_entropy(C, (2,))
-    assert HL == entropy((0.5, 0.5))
+    assert np.all(HL == entropy((0.5, 0.5)))
 
 
 def test_local_entropy_1D_tuple_float():
@@ -119,7 +119,7 @@ def test_local_entropy_1D_tuple_float():
     C = classifier.BinaryClassifier(np.array([0, 1, 0]), 0.5)
     C.classify()
     HL = core.local_entropy(C, (2.0,))
-    assert HL == entropy((0.5, 0.5))
+    assert np.all(HL == entropy((0.5, 0.5)))
 
 
 def test_local_entropy_1D_bad_win():

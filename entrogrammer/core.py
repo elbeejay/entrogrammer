@@ -68,8 +68,8 @@ def local_entropy(Classifier, scale, base=np.e):
 
     Returns
     -------
-    HL: float
-        The averaged local entropy of the classified data array for the
+    HL: numpy.ndarray
+        The local entropy array of the classified data array for the
         specified scale
 
     """
@@ -173,7 +173,8 @@ def calculate_entrogram(Classifier, min_win=None, max_win=None, base=np.e):
     HR = []
     HG = tools.calculate_HG(Classifier.classified, base)  # global entropy
     for i in range(min_win, max_win+1):
-        HR.append(tools.calculate_HL(Classifier.classified, i, base) / HG)
+        HL = np.mean(tools.calculate_HL(Classifier.classified, i, base))
+        HR.append(HL / HG)
 
     win_size = list(range(min_win, max_win+1))  # list of window size values
 

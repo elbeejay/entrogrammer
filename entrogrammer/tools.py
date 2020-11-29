@@ -59,18 +59,22 @@ def calculate_HL(data, win_size, base):
 
     Returns
     -------
-    HL: float
-        The averaged local entropy of the classified data array for the
-        specified scale
+    HL: numpy.ndarray
+        The local entropy vector of the classified data array for the
+        specified scale (same shape as `data` input parameter)
 
     """
+    # init arrays for entropy and counts (because numba is bad for this)
+    h = np.zeros_like(data).astype('float')
+    cnt = np.zeros_like(data)
+
     # 1-D solution
     if ((len(np.shape(data)) == 1) and (base == 2)):
-        return HL_1D_base2(data, win_size)
+        return HL_1D_base2(data, win_size, h, cnt)
     elif ((len(np.shape(data)) == 1) and (base == 10)):
-        return HL_1D_base10(data, win_size)
+        return HL_1D_base10(data, win_size, h, cnt)
     elif ((len(np.shape(data)) == 1) and (base == np.e)):
-        return HL_1D_basee(data, win_size)
+        return HL_1D_basee(data, win_size, h, cnt)
     else:
         pass
 
@@ -96,53 +100,53 @@ def calculate_HL(data, win_size, base):
 
 
 @njit
-def HL_1D_base2(data, win_size):
+def HL_1D_base2(data, win_size, h, cnt):
     """Do the 1-D local entropy calculation with base 2."""
-    h = 0
     num_slides = len(data) - win_size + 1
     for i in range(num_slides):
+        cnt[i:(i+win_size)] += 1  # count the cells visited by this window
         unique_counts = np_unique_impl(data[i:(i+win_size)])
         probs = []
         for k in unique_counts:
             probs.append(k / win_size)
         # do entropy calculation
         for j in range(len(probs)):
-            h += -1 * probs[j] * np.log2(probs[j])
-    h = h / num_slides  # make average by dividing by number of slides
+            h[i:(i+win_size)] += -1 * probs[j] * np.log2(probs[j])
+    h = h / cnt  # make average by dividing by number of visits
     return h
 
 
 @njit
-def HL_1D_base10(data, win_size):
+def HL_1D_base10(data, win_size, h, cnt):
     """Do the 1-D local entropy calculation with base 10."""
-    h = 0
     num_slides = len(data) - win_size + 1
     for i in range(num_slides):
+        cnt[i:(i+win_size)] += 1  # count the cells visited by this window
         unique_counts = np_unique_impl(data[i:(i+win_size)])
         probs = []
         for k in unique_counts:
             probs.append(k / win_size)
         # do entropy calculation
         for j in range(len(probs)):
-            h += -1 * probs[j] * np.log10(probs[j])
-    h = h / num_slides  # make average by dividing by number of slides
+            h[i:(i+win_size)] += -1 * probs[j] * np.log10(probs[j])
+    h = h / cnt  # make average by dividing by number of visits
     return h
 
 
 @njit
-def HL_1D_basee(data, win_size):
+def HL_1D_basee(data, win_size, h, cnt):
     """Do the 1-D local entropy calculation with base e."""
-    h = 0
     num_slides = len(data) - win_size + 1
     for i in range(num_slides):
+        cnt[i:(i+win_size)] += 1  # count the cells visited by this window
         unique_counts = np_unique_impl(data[i:(i+win_size)])
         probs = []
         for k in unique_counts:
             probs.append(k / win_size)
         # do entropy calculation
         for j in range(len(probs)):
-            h += -1 * probs[j] * np.log(probs[j])
-    h = h / num_slides  # make average by dividing by number of slides
+            h[i:(i+win_size)] += -1 * probs[j] * np.log(probs[j])
+    h = h / cnt  # make average by dividing by number of visits
     return h
 
 
