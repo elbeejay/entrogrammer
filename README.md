@@ -27,7 +27,7 @@ To install from source, take the following steps:
 - `git clone` the repository
 - From your local copy of the repository run either `python setup.py install` to do a standard installation, or `pip install -e .` for an "editable" installation of the package
 
-If you have issues installing the package via either method, check that you've got the dependencies installed. The dependencies for `entrogrammer` can be found in the [requirements.txt](https://github.com/elbeejay/entrogrammer/blob/main/requirements.txt) file.
+If you have issues installing the package via either method, check that you've got the dependencies installed. The dependencies for `entrogrammer` can be found in the [requirements.txt](./requirements.txt) file.
 
 ## Introduction and Quickstart
 In a nutshell, entropy quantifies the "surprise" content of some set of data. By this, we mean that if data are assigned probabilities and randomly drawn, entropy quantifies the "surprise" you'd encounter in the random drawing (no surprise if all data is identical, high amount of surprise if data is all different). For a more thorough description of entropy, we recommend starting with Claude Shannon's seminal paper on the subject [[1]](#1).
@@ -57,7 +57,7 @@ HR, win_size = core.calculate_entrogram(C)  # calculate the entrogram of this ve
 From this point, the entrogram for this data could be plotted by making a plot of `HR` vs `win_size` to get a visual understanding of how the entropy varies at different scales. For a definition of the entrogram, some examples and an explanation of the metric, see [[3]](#3) and the [background](#background) section.
 
 ## Examples
-For example jupyter notebooks illustrating the functionality provided in `entrogrammer` please visit the [examples subdirectory](https://github.com/elbeejay/entrogrammer/tree/main/examples).
+For example jupyter notebooks illustrating the functionality provided in `entrogrammer` please visit the [examples subdirectory](./examples).
 
 ## Background
 Herein the procedures used by `entrogrammer` are described...
