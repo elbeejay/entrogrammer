@@ -84,6 +84,7 @@ class BinaryClassifier(BaseClassifier):
         """
         super().__init__(data)
         self.threshold = threshold
+        self.classify()
 
     @property
     def threshold(self):

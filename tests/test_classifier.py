@@ -40,13 +40,15 @@ def test_binary_neg_threshold():
     C = classifier.BinaryClassifier(vals, -7.5)
     assert np.all(C.data[0, :] == -5)
     assert np.all(C.data[1, :] == -10)
+    assert np.all(C.classified[0, :] == 1)
+    assert np.all(C.classified[1, :] == 0)
     # check threshold value
     assert C.threshold == -7.5
-    # classify then check values
-    C.classify()
+    # re-classify then check values
+    C.classify(0)
     assert np.all(C.data[0, :] == -5)
     assert np.all(C.data[1, :] == -10)
-    assert np.all(C.classified[0, :] == 1)
+    assert np.all(C.classified[0, :] == 0)
     assert np.all(C.classified[1, :] == 0)
 
 
@@ -57,10 +59,6 @@ def test_binary_pos_threshold():
     vals[1, :] = 10
     # create classifier
     C = classifier.BinaryClassifier(vals, 7)
-    assert np.all(C.data[0, :] == 5)
-    assert np.all(C.data[1, :] == 10)
-    # classify then check values
-    C.classify()
     assert np.all(C.data[0, :] == 5)
     assert np.all(C.data[1, :] == 10)
     assert np.all(C.classified[0, :] == 0)
