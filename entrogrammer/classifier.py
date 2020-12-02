@@ -116,3 +116,79 @@ class BinaryClassifier(BaseClassifier):
         else:
             self._classified[self._data >= self._threshold] = 1
             self._classified[self._data < self._threshold] = 0
+
+
+class JenksClassifier(BaseClassifier):
+    """Classifier that uses the Fisher-Jenks algorithm.
+
+    This class is used to apply the Fisher-Jenks algorithm to compute natural
+    breaks given some data. This classification scheme attempts to define a
+    set of classes given some data values so that the variance within classes
+    is minimal, and the variance between different classes is maximal. To do
+    this in `entrogrammer`, the `jenkspy` python package
+    (https://github.com/mthh/jenkspy) is used.
+
+    """
+    def __init__(self, data, nb_class):
+        """Initialize the JenksClassifier.
+
+        Parameters
+        ----------
+        data : numpy.ndarray
+            Input data array.
+
+        nb_class : int, float
+            Desired number of classes to split the data into. If input as a
+            float, this will be turned into an integer. Must be lower than the
+            number of data points, and greater than 2.
+
+        """
+        super().__init__(data)
+        self.nb_class = nb_class
+        self.classify()
+
+    @property
+    def nb_class(self):
+        """Return private nb_class variable."""
+        return self._nb_class
+
+    @nb_class.setter
+    def nb_class(self, nb_class):
+        """Check the nb_class value and set it as a private variable."""
+        # type checking
+        if type(nb_class) is int:
+            self._nb_class = nb_class
+        elif type(nb_class) is float:
+            self._nb_class = int(nb_class)
+        else:
+            raise TypeError('Invalid type for "nb_class", expected an '
+                            'int or float but got: %s' + type(nb_class))
+        # value checking
+        data_len = len(self._data.ravel())
+        if nb_class >= data_len:
+            raise ValueError('"nb_class" must be lower than the number of '
+                             'data points.')
+        if nb_class < 2:
+            raise ValueError('"nb_class" must be greater than 2.')
+
+    def classify(self, nb_class=None):
+        """Do the jenks classification."""
+        # try to import jenkspy package
+        try:
+            from jenkspy import JenksNaturalBreaks
+        except Exception:
+            raise ImportError('`jenkspy` optional dependency not installed.')
+        # set nb_class
+        if nb_class is None:
+            nb_class = self._nb_class
+        # type-check nb_class
+        if type(nb_class) is not int:
+            raise ValueError('"nb_class" must be an integer')
+        # ravel the data array in-case it is multidimensional
+        data = np.ravel(self._data)
+        # initialize the jenks object
+        jnb = JenksNaturalBreaks(nb_class)
+        # do classification
+        jnb.fit(data)
+        # populate self._classified with the classified labels
+        self._classified = np.reshape(jnb.labels_, self._data.shape)
