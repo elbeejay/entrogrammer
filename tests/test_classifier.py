@@ -168,3 +168,47 @@ def test_jenks_big_nbclass():
     vals[3:] = 1
     with pytest.raises(ValueError):
         classifier.JenksClassifier(vals, 6)
+
+
+# tests for histogram-like binning
+def test_hist_int():
+    """Test HistogramClassifier with integer."""
+    vals = np.array([0, 10, 20, 100])
+    C = classifier.HistogramClassifier(vals, 2)
+    assert np.all(C.classified == np.array([1, 1, 1, 3]))
+
+
+def test_hist_range():
+    """Test HistogramClassifier with range."""
+    vals = np.array([20, 40, 60])
+    C = classifier.HistogramClassifier(vals, 2.0, range=(0, 100))
+    assert np.all(C.classified == np.array([1, 1, 2]))
+    assert C.range == (0, 100)
+
+
+def test_hist_defaults():
+    """Test HistogramClassifier with defaults."""
+    vals = np.zeros((10,))
+    vals[6:] = 5
+    C = classifier.HistogramClassifier(vals)
+    assert np.all(C.classified[:6] == 1)
+    assert np.all(C.classified[6:] == 11)
+    # re-apply classifier with new info
+    C.classify(bins=2, range=(0, 6))
+    assert np.all(C.classified[:6] == 1)
+    assert np.all(C.classified[6:] == 2)
+    assert C.bins == 10
+
+
+def test_hist_badbin():
+    """error with bad bin value"""
+    vals = np.zeros((10,))
+    with pytest.raises(TypeError):
+        classifier.HistogramClassifier(vals, bins='badbin')
+
+
+def test_hist_badrange():
+    """error with bad range value"""
+    vals = np.zeros((10,))
+    with pytest.raises(TypeError):
+        classifier.HistogramClassifier(vals, bins=10.0, range='badrange')

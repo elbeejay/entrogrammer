@@ -192,3 +192,77 @@ class JenksClassifier(BaseClassifier):
         jnb.fit(data)
         # populate self._classified with the classified labels
         self._classified = np.reshape(jnb.labels_, self._data.shape)
+
+
+class HistogramClassifier(BaseClassifier):
+    """Exposes histogram binning classifiation functionality.
+
+    This class is used to classify data into a specified number of bins.
+    Uses np.histogram and np.digitize to do this.
+
+    """
+
+    def __init__(self, data, bins=10, range=None):
+        """Initialize the HistogramClassifier.
+
+        Parameters
+        ----------
+        data : numpy.ndarray
+            Input data array.
+
+        bins : int, optional
+            Defines the number of bins, is 10 by default.
+
+        range : (float, float), optional
+            Lower and upper range of bins if specified.
+
+        """
+        super().__init__(data)
+        self.bins = bins
+        self.range = range
+        self.classify()
+
+    @property
+    def bins(self):
+        """Return private bins variable."""
+        return self._bins
+
+    @bins.setter
+    def bins(self, bins):
+        """Set the bins value."""
+        if isinstance(bins, int) is True:
+            self._bins = bins
+        else:
+            if isinstance(bins, float) is True:
+                self._bins = int(bins)
+            else:
+                raise TypeError('Type of bins provided was not recognized '
+                                'it must be an integer if specified.')
+
+    @property
+    def range(self):
+        """Return private range variable."""
+        return self._range
+
+    @range.setter
+    def range(self, range):
+        """Set the range value."""
+        if (isinstance(range, tuple) is True) or (range is None):
+            self._range = range
+        else:
+            raise TypeError('Type of range provided was not recognized, '
+                            'must be a tuple if specified.')
+
+    def classify(self, bins=None, range=None):
+        """Do histogram-based classification."""
+        # set up bins and range
+        if bins is None:
+            bins = self._bins
+        if range is None:
+            range = self._range
+        # if range still none, set by data values
+        if range is None:
+            range = (np.min(self._data), np.max(self._data))
+        # use np.histogram and np.digitize to do classification
+        _, bin_edges = np.histogram(self._data, bins, range)
+        self.classified = np.digitize(self._data, bin_edges)
