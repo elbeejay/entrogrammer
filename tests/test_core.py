@@ -138,3 +138,11 @@ def test_local_entropy_2D_tuple():
     C = classifier.BinaryClassifier(np.zeros((2, 2)), 0.5)
     HL = core.local_entropy(C, (2, 2))
     assert HL == 0
+
+
+def test_entropic_scale():
+    """Test entropic scale calculation."""
+    HR = [0, 0, 0, 1.5, 0]
+    win_size = [10, 20, 30, 40, 50]
+    ent_scale = core.calculate_entropic_scale(HR, win_size)
+    assert ent_scale == 40

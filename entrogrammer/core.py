@@ -181,6 +181,32 @@ def calculate_entrogram(Classifier, min_win=None, max_win=None, base=np.e):
     return HR, win_size
 
 
+def calculate_entropic_scale(HR, win_size):
+    """Calculate the entropic scale given the HR and window size information.
+
+    Finds first index (and corresponding window size) where the relative
+    entropy is greater than or equal to 1 (meaning the local entropy has
+    matched the global entropy).
+
+    Parameters
+    ----------
+    HR: list
+        Entrogram values (relative entropy values)
+
+    win_size: list
+        Corresponding window sizes
+
+    Returns
+    -------
+    entropic_scale: int
+        Window size corresponding to the entropic scale.
+
+    """
+    idx = np.where(np.array(HR) >= 1.0)
+    entropic_scale = win_size[np.min(idx)]
+    return entropic_scale
+
+
 def base_checker(base):
     """Type-checks the log-base input 'base'."""
     if ((int(base) == 2) or (int(base) == 10) or (base == np.e)) is False:
