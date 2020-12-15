@@ -38,7 +38,7 @@ With `entrogrammer`, data can be classified into discrete categories, and entrop
 The gist of the API structure and usage for `entrogrammer` works as follows:
 
 - Using some data, define a "classifier" object (`classifier.py`)
-- Then apply the `classify()` method to classify the data into discrete categories or bins
+- Then apply the `classify()` method to classify the data into discrete categories or bins (if not automatically done when "classifier" is initialized)
 - From `core.py` calculate the entropy statistic or metric you are interested in
 - Then if you so choose, you can plot the computed statistic using one of the plotting methods in `plot.py`
 
@@ -50,7 +50,6 @@ A quick example of calculating the entrogram of a small 1-D series of data ([0, 
 import numpy as np
 from entrogrammer import classifier, core
 C = classifier.BinaryClassifier(np.array([0, 1, 0]), 0.5)  # binary classification of data
-C.classify()
 HR, win_size = core.calculate_entrogram(C)  # calculate the entrogram of this vector
 ```
 
