@@ -1,4 +1,4 @@
-![Entrogrammer Logo](/docs/logo.svg)
+![Entrogrammer Logo](/docs/logo.png)
 
 ![build](https://github.com/elbeejay/entrogrammer/workflows/build/badge.svg)
 [![codecov](https://codecov.io/gh/elbeejay/entrogrammer/branch/main/graph/badge.svg?token=VLEEKXSINN)](https://codecov.io/gh/elbeejay/entrogrammer)
